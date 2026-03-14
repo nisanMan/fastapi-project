@@ -165,6 +165,7 @@ venv/
 git add .
 git commit -m "Version 0 - Initial FastAPI Docker project"
 git status
+git log
 ```
 
 <!--
