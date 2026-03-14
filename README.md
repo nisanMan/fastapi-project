@@ -6,17 +6,28 @@ A minimal backend project built with FastAPI, fully containerized using Docker. 
 ```
 fastapi_project/
 │
-├── app/
+├──app/
 │   ├── main.py
-│   ├── database.py
 │   ├── models.py
 │   ├── schemas.py
-│   ├── auth.py
-│   └── routers/
-│       └── users.py
+│   ├── database.py
+│   │
+│   ├── routers
+│   │   ├── users.py
+│   │   └── items.py
+│   │
+│   └── auth
+│       ├── hashing.py
+│       └── jwt_handler.py
+│   
 ├── requirements.txt
+├── docker-compose.yml
 ├── Dockerfile
 └── Readme
+
+*gitignor
+*readgit
+
 ```
 ## 🧱 Architecture Overview
 #### main.py
