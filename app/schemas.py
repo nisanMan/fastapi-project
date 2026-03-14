@@ -10,12 +10,12 @@ class UserLogin(BaseModel):
     password: str
 
 class ItemCreate(BaseModel):
-    name: str
+    title: str
     description: str
 
 class ItemResponse(BaseModel):
     id: int
-    name: str
+    title: str
     description: str
 
     class Config:
