@@ -1,7 +1,8 @@
-fastapi
-uvicorn
-sqlalchemy
-psycopg2-binary
-python-jose
+
+fastapi==0.111.0
+uvicorn[standard]==0.23.2
+sqlalchemy==2.0.22
+psycopg2-binary==2.9.7
+python-jose==3.3.0
 passlib[bcrypt]
-email-validator
+email-validator==2.1.21
