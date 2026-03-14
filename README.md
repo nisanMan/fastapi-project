@@ -117,8 +117,9 @@ docker run -p 8000:8000 fastapi-app
 -->
 #### 1️⃣ Build the App whit Docker
 ```Bash
-docker compose down --if alrady run befor
-docker compose up
+docker-compose down
+docker-compose build --no-cache   #if needed new continer.
+docker-compose up
 ```
 #### 2️⃣ Access the API
 
