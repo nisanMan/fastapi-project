@@ -148,6 +148,24 @@ docker exec -it fastapi_postgres psql -U postgres -d fastapi_db
 - [ ] Nginx (reverse proxy)
 - [ ] JWT auth
 
+## Git init:
+```Bash
+ git init
+ type nul > .gitignore
+```
+📁  .gitignore:
+```Text
+__pycache__/
+*.pyc
+.env
+venv/
+.DS_Store
+```
+```Bash
+git add .
+git commit -m "Version 0 - Initial FastAPI Docker project"
+git status
+```
 
 <!--
 FastAPI Docker Backend Project – Summary
