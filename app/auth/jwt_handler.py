@@ -1,8 +1,12 @@
 #auth/jwt_handler.py
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
+import os
 
-SECRET_KEY = "SECRET123"
+load_dotenv()  # טוען את קובץ ה-.env
+
+SECRET_KEY = os.getenv("SECRET_KEY")  # קורא מה-.env
 ALGORITHM = "HS256"
 
 def create_token(data: dict):
