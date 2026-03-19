@@ -4,6 +4,7 @@ from pydantic import BaseModel, EmailStr
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
+    phone: str = None #Alembic 
 
 class UserLogin(BaseModel):
     email: EmailStr

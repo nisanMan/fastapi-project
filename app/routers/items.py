@@ -24,6 +24,9 @@ def get_current_user(
         raise HTTPException(status_code=401, detail="User not found")
     return user
 
+#CROD
+
+#Create
 @router.post("/")
 def create_item(
     item: schemas.ItemCreate,
@@ -40,6 +43,51 @@ def create_item(
     db.refresh(new_item)
     return new_item
 
+#Read
 @router.get("/")
 def get_items(db: Session = Depends(get_db)):
     return db.query(models.Item).all()
+
+# Update
+@router.put("/{item_id}")
+def update_item(
+    item_id: int,
+    item: schemas.ItemCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    db_item = db.query(models.Item).filter(models.Item.id == item_id).first()
+
+    if not db_item:
+        raise HTTPException(status_code=404, detail="Item not found")
+
+    if db_item.owner_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not your item")
+
+    db_item.title = item.title
+    db_item.description = item.description
+    db.commit()
+    db.refresh(db_item)
+
+    return db_item
+
+
+# Delete
+@router.delete("/{item_id}")
+def delete_item(
+    item_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    db_item = db.query(models.Item).filter(models.Item.id == item_id).first()
+
+    if not db_item:
+        raise HTTPException(status_code=404, detail="Item not found")
+
+    if db_item.owner_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not your item")
+
+    db.delete(db_item)
+    db.commit()
+
+    return {"message": "Item deleted"}

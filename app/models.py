@@ -9,6 +9,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True)
     password = Column(String)
+    phone = Column(String, nullable=True) #Alembic 
 
     items = relationship("Item", back_populates="owner")
 

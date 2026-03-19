@@ -17,7 +17,8 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     
     new_user = models.User(
         email=user.email,
-        password=hash_password(user.password)
+        password=hash_password(user.password),
+        phone=user.phone #Alembic 
     )
     db.add(new_user)
     db.commit()

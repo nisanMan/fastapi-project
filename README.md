@@ -28,6 +28,7 @@ fastapi_project/
 
 *gitignor
 *readgit
+*sqlalchemy
 
 ```
 ## 🧱 Architecture Overview
@@ -119,7 +120,9 @@ docker run -p 8000:8000 fastapi-app
 #### 1️⃣ Build the App whit Docker
 ```Bash
 docker-compose down
-docker-compose build --no-cache   #if needed new continer.
+docker compose up --build
+# OR if needed new continer:
+docker-compose build --no-cache
 docker-compose up
 ```
 #### 2️⃣ Access the API
@@ -146,20 +149,28 @@ docker exec -it fastapi_postgres psql -U postgres -d fastapi_db
 * Ready for CRUD implementation
 * Ready for PostgreSQL integration
 ---
-## 🛠 Next Steps
+## 🛠 Next Steps V.0
+- [X] Use Docker Compose
+- [X] Use GIT
+- [ ] GITHUB repository
 
-- [ ] Add PostgreSQL connection
+## 🛠 Next Steps v.1
+- [X] JWT auth
+- [X] PostgreSQL connection
+- [X] Implement full CRUD 
+- [ ] Implement Soft Delete
 
-- [ ] Implement full CRUD
-- [ ] Add JWT Authentication
-- [ ] Use Docker Compose
-- [ ] Deploy to cloud (AWS / Railway / Render)
-
-## 🛠 Next Steps v.2
+## 🛠 Next Steps v.3
 - [ ] Alembic (migrations)
 - [ ] Redis (cache)
 - [ ] Nginx (reverse proxy)
-- [ ] JWT auth
+- [ ] Deploy (Railway / Render)
+- [ ] Tests (pytest)
+- [ ] Rate limiting (מניעת spam)
+- [ ] Logging (תיעוד שגיאות)
+- [ ] Pagination (עמודים בתוצאות)
+- [ ] CORS (חיבור לfrontend)
+- [ ] Background tasks (משימות ברקע)
 
 ## Git init:
 ```Bash
@@ -180,15 +191,44 @@ git commit -m "Version 0 - Initial FastAPI Docker project"
 git status
 git log
 ```
-
+## Generic? ✅ Yes ❌ No 
 | File | Generic? | What changes                              |
 |------|----------|-------------------------------------------|
 | `database.py` | ✅ Fully generic | Only the URL                              |
 | `auth/hashing.py` | ✅ Fully generic | Nothing                                   |
-| `auth/jwt_handler.py` | ✅ Fully generic | `SECRET_KEY` → from `.env`                |
+| `auth/jwt_handler.py` | ✅ Fully generic | Nothing       |
 | `routers/users.py` | ✅ Almost generic | Only if you need extra fields on the user |
 | `models.py` | ❌ Changes | Your tables                               |
 | `schemas.py` | ❌ Changes | According to your models                  |
 | `routers/items.py` | ❌ Changes | Your business logic                       |
 | `main.py` | ⚠️ Minimal changes | Add / remove routers                      |
 
+## Generic? ✅ Yes ❌ No
+```
+fastapi_project/
+│
+├──app/
+│   ├── main.py ✅ Minimal changes | Add / remove routers ❌
+│   ├── models.py ❌ Your tables
+│   ├── schemas.py ❌  According to models
+│   ├── database.py ✅
+│   │
+│   ├── routers 
+│   │   ├── users.py ✅ Only if need extra fields in user ❌
+│   │   ├── ...❌
+│   │   └── items.py ❌ According to API logic
+│   │
+│   └── auth ✅
+│       ├── hashing.py ✅
+│       └── jwt_handler.py ✅
+└── ...
+```
+## Use alembic
+```Bash
+# 1. make the chang to models.py
+# 2. crate migration
+docker-compose run api alembic revision --autogenerate -m "TEXT"
+
+# 3. Run on the DB
+docker-compose run api alembic upgrade head
+```
