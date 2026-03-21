@@ -1,4 +1,4 @@
-#app\routers\users.py
+#app\routers\items.py
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -44,9 +44,42 @@ def create_item(
     return new_item
 
 #Read
+# GET /items/ onle user items
 @router.get("/")
-def get_items(db: Session = Depends(get_db)):
-    return db.query(models.Item).all()
+def get_my_items(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    return db.query(models.Item)\
+             .filter(
+                models.Item.owner_id == current_user.id,
+                models.Item.is_deleted == False  #Is soft deleted?
+             ).all()
+
+# GET /items/all — whis pagination
+@router.get("/all")
+def get_all_items(
+    page: int = 1,
+    limit: int = 10,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    skip = (page - 1) * limit
+                                  #filter(models.Item.is_deleted != True)
+    items = db.query(models.Item)\
+              .offset(skip)\
+              .limit(limit)\
+              .all()
+
+    total = db.query(models.Item).count()
+
+    return {
+        "page": page,
+        "limit": limit,
+        "total": total,
+        "pages": -(-total // limit),
+        "data": items
+    }
 
 # Update
 @router.put("/{item_id}")
@@ -79,7 +112,10 @@ def delete_item(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
 ):
-    db_item = db.query(models.Item).filter(models.Item.id == item_id).first()
+    db_item = db.query(models.Item).filter(
+            models.Item.id == item_id,
+            models.Item.is_deleted == False
+        ).first()
 
     if not db_item:
         raise HTTPException(status_code=404, detail="Item not found")
@@ -87,7 +123,7 @@ def delete_item(
     if db_item.owner_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not your item")
 
-    db.delete(db_item)
+    db_item.is_deleted = True #db.delete(db_item)
     db.commit()
 
     return {"message": "Item deleted"}

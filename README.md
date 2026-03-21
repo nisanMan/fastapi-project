@@ -1,5 +1,6 @@
-# 🚀 FastAPI Docker Backend
+# 🚀 FastAPI Project
 
+A REST API built with FastAPI, PostgreSQL, Docker, and JWT Authentication.
 A minimal backend project built with FastAPI, fully containerized using Docker. This project serves as a foundation for building scalable REST APIs.
 ---
 ## 📁 Project Structure
@@ -11,6 +12,7 @@ fastapi_project/
 │   ├── models.py
 │   ├── schemas.py
 │   ├── database.py
+│   ├── logger.py
 │   │
 │   ├── routers
 │   │   ├── users.py
@@ -31,56 +33,56 @@ fastapi_project/
 *sqlalchemy
 
 ```
-## 🧱 Architecture Overview
-#### main.py
+## ⚙️ Setup & Run
+```bash
+# Clone the project
+git clone 
 
-- App entry point
+# Create .env file
+cp .env.example .env
 
-- Registers routers
-
-#### database.py
-
-- Database connection
-
-- SQLAlchemy session
-
-#### models.py
-
-- Database tables
-
-#### schemas.py
-
-- Pydantic validation models
-
-#### auth.py
-
-- Password hashing
-
-- JWT creation & validation
-
-#### routers/users.py
-
-- Register
-
-- Login
-
-Protected routes
----
-## 📌 main.py
-
-* Initializes the FastAPI application
-* Defines API routes
-* Runs via Uvicorn inside Docker
-* Example:
-```Python
-from fastapi import FastAPI
-
-app = FastAPI()
-
-@app.get("/")
-def root():
-    return {"message": "FastAPI is running 🚀"}
+# Build and run
+docker-compose up --build
 ```
+API available at: `http://localhost:8000`
+
+Swagger docs: `http://localhost:8000/docs`
+
+---
+## 🔐 Authentication
+
+Register and login to receive a JWT token.
+Include it in requests as: `Authorization: Bearer <token>`
+---
+# 📌 API Endpoints
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| POST | `/users/register` | ❌ | Register new user |
+| POST | `/users/login` | ❌ | Login and get token |
+| GET | `/items/` | ✅ | Get your items |
+| GET | `/items/all` | ✅ | Get all items |
+| POST | `/items/` | ✅ | Create item |
+| PUT | `/items/{id}` | ✅ | Update item |
+| DELETE | `/items/{id}` | ✅ | Delete item |
+
+---
+## 🗄️ Database Migrations (Alembic)
+```bash
+# Create migration after model change
+docker-compose run api alembic revision --autogenerate -m "description"
+
+# Apply migrations
+docker-compose run api alembic upgrade head
+
+# Rollback last migration
+docker-compose run api alembic downgrade -1
+```
+
+---
+
+## 🧱 Architecture Overview
+#### !!!
 ---
 ## 📦 requirements.txt
 
@@ -97,26 +99,10 @@ Installed automatically during Docker build.
 ---
 ## 🐳 Dockerfile
 
-Responsible for:
-* Using Python 3.11 slim image
-* Installing dependencies
-* Copying project files
-* Exposing port 8000
-* Running the FastAPI server
----
 ## ▶️ How to Run
 > Enter the directory from CMD and run:
 > * The Docker app needs to be running.
-<!--
-#### 1️⃣ Build the Docker image
-```Bash
-docker build -t fastapi-app .
-```
-#### 2️⃣ Run the container
-```Bash
-docker run -p 8000:8000 fastapi-app
-``` 
--->
+
 #### 1️⃣ Build the App whit Docker
 ```Bash
 docker-compose down
@@ -149,28 +135,28 @@ docker exec -it fastapi_postgres psql -U postgres -d fastapi_db
 * Ready for CRUD implementation
 * Ready for PostgreSQL integration
 ---
-## 🛠 Next Steps V.0
+## 🛠 Next Steps V1.0
 - [X] Use Docker Compose
 - [X] Use GIT
 - [ ] GITHUB repository
 
-## 🛠 Next Steps v.1
+## 🛠 Next Steps v1.1
 - [X] JWT auth
 - [X] PostgreSQL connection
 - [X] Implement full CRUD 
-- [ ] Implement Soft Delete
+- [X] Implement Soft Delete
 
-## 🛠 Next Steps v.3
-- [ ] Alembic (migrations)
+### v1.2
+- [x] Alembic migrations
+- [x] CORS
+- [X] Pagination
+- [ ] Tests (pytest)
+- [X] Logging
+- [ ] Rate limiting
 - [ ] Redis (cache)
 - [ ] Nginx (reverse proxy)
 - [ ] Deploy (Railway / Render)
-- [ ] Tests (pytest)
-- [ ] Rate limiting (מניעת spam)
-- [ ] Logging (תיעוד שגיאות)
-- [ ] Pagination (עמודים בתוצאות)
-- [ ] CORS (חיבור לfrontend)
-- [ ] Background tasks (משימות ברקע)
+- [ ] Background tasks
 
 ## Git init:
 ```Bash
@@ -223,12 +209,23 @@ fastapi_project/
 │       └── jwt_handler.py ✅
 └── ...
 ```
-## Use alembic
-```Bash
-# 1. make the chang to models.py
-# 2. crate migration
-docker-compose run api alembic revision --autogenerate -m "TEXT"
+## 🗄️ Database Migrations (Alembic)
+```bash
+# Create migration after model change
+docker-compose run api alembic revision --autogenerate -m "description"
 
-# 3. Run on the DB
+# Apply migrations
 docker-compose run api alembic upgrade head
+
+# Rollback last migration
+docker-compose run api alembic downgrade -1
 ```
+
+id |                 title                  |                   description                   | owner_id |         created_at         |         updated_at         | is_deleted
+----+----------------------------------------+-------------------------------------------------+----------+----------------------------+----------------------------+------------
+2 | my user user@example.com me pasword is | 123456                                          |        1 |                            |                            |
+4 | nisan@example.com                      | 654321                                          |        2 |                            |                            |
+8 | the 3 user is NewUser@example.com      | my password is 111111 don't tale it is a secret |        3 |                            |                            |
+10 | i posted it for soft delete            | string of garbage                               |        1 | 2026-03-21 11:30:54.334735 | 2026-03-21 11:30:54.334739 | f
+9 | i posted it for soft delete            | string of garbage                               |        1 | 2026-03-21 11:30:48.55164  | 2026-03-21 11:31:32.10828  | t
+(5 rows)
