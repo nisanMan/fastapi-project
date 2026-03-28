@@ -21,6 +21,11 @@ fastapi_project/
 │   └── auth
 │       ├── hashing.py
 │       └── jwt_handler.py
+├── tests/
+│   ├── __init__.py
+│   ├── conftest.py
+│   ├── test_users.py
+│   └── test_items.py
 │ 
 ├── .env   
 ├── requirements.txt
@@ -157,6 +162,11 @@ docker exec -it fastapi_postgres psql -U postgres -d fastapi_db
 - [ ] Nginx (reverse proxy)
 - [ ] Deploy (Railway / Render)
 - [ ] Background tasks
+
+### v1.3
+- [ ] Background tasks
+- [ ] Environment separation (dev / staging / prod)
+- [ ] CI/CD (GitHub Actions)
 
 ## Git init:
 ```Bash
