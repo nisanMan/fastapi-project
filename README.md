@@ -140,33 +140,31 @@ docker exec -it fastapi_postgres psql -U postgres -d fastapi_db
 * Ready for CRUD implementation
 * Ready for PostgreSQL integration
 ---
-## 🛠 Next Steps V1.0
+## 🛠 Next Steps 
+>V1.0
 - [X] Use Docker Compose
 - [X] Use GIT
-- [ ] GITHUB repository
-
-## 🛠 Next Steps v1.1
+>v1.1
 - [X] JWT auth
 - [X] PostgreSQL connection
 - [X] Implement full CRUD 
 - [X] Implement Soft Delete
-
-### v1.2
+>v1.2
 - [x] Alembic migrations
 - [x] CORS
 - [X] Pagination
-- [ ] Tests (pytest)
 - [X] Logging
-- [ ] Rate limiting
+>v1.3
+- [X] Tests (pytest)
+>v1.4
+- [X] GitHub Repository
+- [ ] CI/CD (GitHub Actions)
+- [ ] Deploy (Railway / Render)
+- [ ] Rate Limiting
 - [ ] Redis (cache)
 - [ ] Nginx (reverse proxy)
-- [ ] Deploy (Railway / Render)
-- [ ] Background tasks
-
-### v1.3
 - [ ] Background tasks
 - [ ] Environment separation (dev / staging / prod)
-- [ ] CI/CD (GitHub Actions)
 
 ## Git init:
 ```Bash
@@ -231,11 +229,31 @@ docker-compose run api alembic upgrade head
 docker-compose run api alembic downgrade -1
 ```
 
-id |                 title                  |                   description                   | owner_id |         created_at         |         updated_at         | is_deleted
-----+----------------------------------------+-------------------------------------------------+----------+----------------------------+----------------------------+------------
-2 | my user user@example.com me pasword is | 123456                                          |        1 |                            |                            |
-4 | nisan@example.com                      | 654321                                          |        2 |                            |                            |
-8 | the 3 user is NewUser@example.com      | my password is 111111 don't tale it is a secret |        3 |                            |                            |
-10 | i posted it for soft delete            | string of garbage                               |        1 | 2026-03-21 11:30:54.334735 | 2026-03-21 11:30:54.334739 | f
-9 | i posted it for soft delete            | string of garbage                               |        1 | 2026-03-21 11:30:48.55164  | 2026-03-21 11:31:32.10828  | t
-(5 rows)
+
+## 🧪 Tests
+
+Tests are written with **pytest** and use a separate **SQLite** database
+so they never affect production data.
+
+### Run tests
+```bash
+docker-compose run api pytest tests/ -v
+```
+
+### Test coverage
+
+| File | Tests |
+|------|-------|
+| `test_users.py` | register, duplicate register, login, wrong password |
+| `test_items.py` | create, get, delete, delete by non-owner (403) |
+
+| Test | What it checks |
+|------|---------------|
+| `test_register` | Registration returns 201 |
+| `test_register_duplicate` | Duplicate email returns 400 |
+| `test_login` | Login returns a JWT token |
+| `test_login_wrong_password` | Wrong password returns 401 |
+| `test_create_item` | Item creation works correctly |
+| `test_get_items` | Items are returned for authenticated user |
+| `test_delete_item` | Owner can delete their item |
+| `test_delete_item_not_owner` | Non-owner gets 403 Forbidden |
