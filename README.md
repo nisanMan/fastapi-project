@@ -91,19 +91,6 @@ docker-compose run api alembic downgrade -1
 ## 🧱 Architecture Overview
 
 ---
-## 📦 requirements.txt
-
-Defines all required dependencies:
-
-* fastapi
-* uvicorn
-* sqlalchemy
-* psycopg2-binary
-* python-jose
-* passlib[bcrypt]
-
-Installed automatically during Docker build.
----
 ## 🐳 Dockerfile
 
 ## ▶️ How to Run
