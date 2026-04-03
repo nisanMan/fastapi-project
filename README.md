@@ -147,7 +147,7 @@ docker exec -it fastapi_postgres psql -U postgres -d fastapi_db
 - [X] Tests (pytest)
 >v1.4
 - [x] GitHub Repository
-- [ ] CI/CD (GitHub Actions)
+- [X] CI/CD (GitHub Actions)
 - [ ] Deploy (Railway)
 
 >v1.5 — Architecture & Config
