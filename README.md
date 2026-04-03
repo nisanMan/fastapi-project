@@ -6,7 +6,9 @@ A minimal backend project built with FastAPI, fully containerized using Docker. 
 ## 📁 Project Structure
 ```
 fastapi_project/
-│
+├── .github/                  
+│   └── workflows/            
+│       └── ci.yml 
 ├──app/
 │   ├── main.py
 │   ├── models.py
@@ -87,7 +89,7 @@ docker-compose run api alembic downgrade -1
 ---
 
 ## 🧱 Architecture Overview
-#### !!!
+
 ---
 ## 📦 requirements.txt
 
@@ -157,34 +159,38 @@ docker exec -it fastapi_postgres psql -U postgres -d fastapi_db
 >v1.3
 - [X] Tests (pytest)
 >v1.4
-- [X] GitHub Repository
+- [x] GitHub Repository
 - [ ] CI/CD (GitHub Actions)
-- [ ] Deploy (Railway / Render)
+- [ ] Deploy (Railway)
+
+>v1.5 — Architecture & Config
+- [ ] Config Class (pydantic-settings)
+- [ ] Repository & Service Pattern
+- [ ] Health Check endpoint
+
+> v1.6 — Security
 - [ ] Rate Limiting
+- [ ] Refresh Tokens
+- [ ] Email Verification
+- [ ] Password Reset
+
+> v1.7 — Monitoring & Docs
+- [ ] Structured JSON Logging
+- [ ] Metrics (request count, response time)
+- [ ] Swagger descriptions per endpoint
+- [ ] API Versioning `/api/v1/`
+
+> v1.8 — Tests
+- [ ] Test Coverage Report
+- [ ] Integration Tests
+- [ ] Factory Pattern for test data
+
+> v2.0 — Infrastructure
 - [ ] Redis (cache)
 - [ ] Nginx (reverse proxy)
 - [ ] Background tasks
 - [ ] Environment separation (dev / staging / prod)
 
-## Git init:
-```Bash
- git init
- type nul > .gitignore
-```
-📁  .gitignore:
-```Text
-__pycache__/
-*.pyc
-.env
-venv/
-.DS_Store
-```
-```Bash
-git add .
-git commit -m "Version 0 - Initial FastAPI Docker project"
-git status
-git log
-```
 ## Generic? ✅ Yes ❌ No 
 | File | Generic? | What changes                              |
 |------|----------|-------------------------------------------|
