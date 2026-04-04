@@ -17,9 +17,19 @@ fastapi_project/
 │   ├── logger.py
 │   ├── config.py
 │   │
-│   ├── routers
-│   │   ├── users.py
-│   │   └── items.py
+│   ├──repositories/
+│   │   ├── __init__.py
+│   │   ├── user_repository.py
+│   │   └──item_repository.py
+│   │
+│   ├──services/
+│   │   ├──__init__.py
+│   │   ├──user_service.py
+│   │   └──item_service.py
+│   │
+│   ├── routers       !
+│   │   ├── users.py  !
+│   │   └── items.py  !
 │   │
 │   └── auth
 │       ├── hashing.py
