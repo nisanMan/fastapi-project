@@ -12,6 +12,7 @@ fastapi_project/
 ├── .github/
 │   └── workflows/
 │       └── ci.yml
+│
 ├── app/
 │   ├── main.py
 │   ├── models.py
@@ -19,26 +20,33 @@ fastapi_project/
 │   ├── database.py
 │   ├── logger.py
 │   ├── config.py
+│   │ 
 │   ├── repositories/
 │   │   ├── __init__.py
 │   │   ├── user_repository.py
 │   │   └── item_repository.py
+│   │ 
 │   ├── services/
 │   │   ├── __init__.py
 │   │   ├── user_service.py
 │   │   └── item_service.py
+│   │ 
 │   ├── routers/
 │   │   ├── users.py
 │   │   ├── items.py
 │   │   └── health.py
+│   │ 
 │   └── auth/
 │       ├── hashing.py
 │       └── jwt_handler.py
+│ 
 ├── tests/
 │   ├── __init__.py
 │   ├── conftest.py
+│   ├── test_health.py
 │   ├── test_users.py
 │   └── test_items.py
+│ 
 ├── .env
 ├── requirements.txt
 ├── docker-compose.yml
@@ -167,12 +175,19 @@ docker-compose run api pytest tests/ -v
 |---|---|
 | `test_register` | Registration returns 201 |
 | `test_register_duplicate` | Duplicate email returns 400 |
+| `test_register_invalid_email` | Invalid email format returns 422 |
 | `test_login` | Login returns a JWT token |
 | `test_login_wrong_password` | Wrong password returns 401 |
+| `test_login_nonexistent_user` | Unknown email returns 404 |
 | `test_create_item` | Item creation works correctly |
+| `test_get_items_empty` | Empty list returned when no items exist |
 | `test_get_items` | Items returned for authenticated user |
+| `test_get_all_items` | Paginated results return correct total and data |
+| `test_update_item` | Owner can update their item |
+| `test_update_item_not_owner` | Non-owner update returns 403 Forbidden |
 | `test_delete_item` | Owner can delete their item |
-| `test_delete_item_not_owner` | Non-owner receives 403 Forbidden |
+| `test_delete_item_not_owner` | Non-owner delete returns 403 Forbidden |
+| `test_health_check` | App and database return status ok |
 
 ---
 
