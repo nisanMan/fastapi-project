@@ -15,6 +15,7 @@ fastapi_project/
 │   ├── schemas.py
 │   ├── database.py
 │   ├── logger.py
+│   ├── config.py
 │   │
 │   ├── routers
 │   │   ├── users.py
@@ -148,10 +149,10 @@ docker exec -it fastapi_postgres psql -U postgres -d fastapi_db
 >v1.4
 - [x] GitHub Repository
 - [X] CI/CD (GitHub Actions)
-- [ ] Deploy (Railway)
+- [X] Deploy (Railway)
 
 >v1.5 — Architecture & Config
-- [ ] Config Class (pydantic-settings)
+- [X] Config Class (pydantic-settings)
 - [ ] Repository & Service Pattern
 - [ ] Health Check endpoint
 
