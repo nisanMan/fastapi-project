@@ -163,8 +163,10 @@ docker exec -it fastapi_postgres psql -U postgres -d fastapi_db
 
 >v1.5 — Architecture & Config
 - [X] Config Class (pydantic-settings)
-- [ ] Repository & Service Pattern
+- [X] Repository & Service Pattern
 - [ ] Health Check endpoint
+
+> ```Request → Router → Service → Repository → DB```
 
 > v1.6 — Security
 - [ ] Rate Limiting

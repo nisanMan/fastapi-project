@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .database import engine
 from . import models
 
-from .routers import users, items
+from .routers import users, items, health
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -22,3 +22,4 @@ app.add_middleware(
 
 app.include_router(users.router)
 app.include_router(items.router)
+app.include_router(health.router)
