@@ -1,4 +1,5 @@
 # tests/conftest.py
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -15,12 +16,14 @@ engine = create_engine(
 )
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
 def override_get_db():
     db = TestingSessionLocal()
     try:
         yield db
     finally:
         db.close()
+
 
 @pytest.fixture
 def client():
@@ -30,6 +33,7 @@ def client():
         yield c
     Base.metadata.drop_all(bind=engine)
     app.dependency_overrides.clear()
+
 
 @pytest.fixture
 def auth_headers(client):
@@ -43,3 +47,21 @@ def auth_headers(client):
     })
     token = response.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture
+def auth_data(client):                          # ← חדש — מחזיר גם cookie
+    client.post("/users/register", json={
+        "email": "test@example.com",
+        "password": "123456"
+    })
+    response = client.post("/users/login", json={
+        "email": "test@example.com",
+        "password": "123456"
+    })
+    token = response.json()["access_token"]
+    refresh_token = response.cookies.get("refresh_token")
+    return {
+        "headers": {"Authorization": f"Bearer {token}"},
+        "refresh_token": refresh_token
+    }

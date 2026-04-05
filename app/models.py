@@ -1,8 +1,14 @@
-#app\models.py
+# app/models.py
+
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship
-from .database import Base 
-from datetime import datetime
+from .database import Base
+from datetime import datetime, timezone
+
+
+def utcnow():
+    return datetime.now(timezone.utc)
+
 
 class User(Base):
     __tablename__ = "users"
@@ -10,9 +16,24 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True)
     password = Column(String)
-    phone = Column(String, nullable=True) #Alembic
+    phone = Column(String, nullable=True)
+    is_active = Column(Boolean, default=True)
 
     items = relationship("Item", back_populates="owner")
+    refresh_tokens = relationship("RefreshToken", back_populates="user")
+
+
+class RefreshToken(Base):
+    __tablename__ = "refresh_tokens"
+
+    id = Column(Integer, primary_key=True, index=True)
+    token_hash = Column(String, unique=True, index=True, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    expires_at = Column(DateTime, nullable=False)
+    revoked = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=utcnow)  # ← תיקון
+
+    user = relationship("User", back_populates="refresh_tokens")
 
 
 class Item(Base):
@@ -23,19 +44,19 @@ class Item(Base):
     description = Column(String)
     owner_id = Column(Integer, ForeignKey("users.id"))
 
-    # Metadata
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)           # ← תיקון
+    updated_at = Column(DateTime, default=utcnow, onupdate=utcnow)  # ← תיקון
     is_deleted = Column(Boolean, default=False)
 
     owner = relationship("User", back_populates="items")
+
 
 class Log(Base):
     __tablename__ = "logs"
 
     id = Column(Integer, primary_key=True, index=True)
-    level = Column(String)        # INFO / WARNING / ERROR
-    message = Column(String)      # תיאור האירוע
-    user_id = Column(Integer, nullable=True)  # מי גרם לאירוע
-    path = Column(String)         # איזה endpoint
-    created_at = Column(DateTime, default=datetime.utcnow)
+    level = Column(String)
+    message = Column(String)
+    user_id = Column(Integer, nullable=True)
+    path = Column(String)
+    created_at = Column(DateTime, default=utcnow)           # ← תיקון
