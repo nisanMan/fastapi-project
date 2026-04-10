@@ -1,16 +1,14 @@
+# app/routers/users.py
 from fastapi import APIRouter, Depends, Cookie, Response, HTTPException, status, Request
-from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from .. import schemas
 from ..database import get_db
 from ..services.user_service import UserService
-from ..auth.jwt_handler import decode_token
+from ..auth.jwt_handler import decode_token, oauth2_scheme
 from ..limiter import limiter
 from ..config import settings
 
 router = APIRouter(prefix="/users", tags=["Users"])
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
 
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
