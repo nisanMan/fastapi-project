@@ -1,12 +1,8 @@
-#tests/test_rate_limit.py
 import pytest
 from fastapi.testclient import TestClient
-from app.main import app
-
-client = TestClient(app)
 
 
-def test_login_rate_limit():
+def test_login_rate_limit(client):
     payload = {"email": "x@x.com", "password": "wrong"}
     
     for _ in range(5):
@@ -16,7 +12,7 @@ def test_login_rate_limit():
     assert response.status_code == 429
 
 
-def test_register_rate_limit():
+def test_register_rate_limit(client):
     for i in range(3):
         client.post("/users/register", json={
             "email": f"test{i}@test.com",
@@ -30,7 +26,7 @@ def test_register_rate_limit():
     assert response.status_code == 429
 
 
-def test_rate_limit_response_format():
+def test_rate_limit_response_format(client):
     payload = {"email": "x@x.com", "password": "wrong"}
     
     for _ in range(5):
