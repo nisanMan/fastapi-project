@@ -3,7 +3,7 @@
 from jose import jwt, JWTError
 from datetime import datetime, timedelta, timezone
 from fastapi import HTTPException, status, Depends
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from app.config import get_settings
 from app.database import get_db
@@ -42,25 +42,25 @@ def decode_token(token: str) -> dict:
 def create_refresh_token() -> tuple[str, str, datetime]:
     token = secrets.token_urlsafe(64)
     token_hash = hashlib.sha256(token.encode()).hexdigest()
-    expires_at = datetime.now(timezone.utc) + timedelta(days=settings.refresh_token_expire_days)  # ← עדכון
+    expires_at = datetime.now(timezone.utc) + timedelta(days=settings.refresh_token_expire_days)
     return token, token_hash, expires_at
 
 
 def hash_token(token: str) -> str:
-    """הופך טוקן גולמי ל-hash לחיפוש ב-DB"""
     return hashlib.sha256(token.encode()).hexdigest()
+
 
 # ───── Current User ─────
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
+security = HTTPBearer()
 
 
 def get_current_user(
-    token: str = Depends(oauth2_scheme),
+    credentials: HTTPAuthorizationCredentials = Depends(security),
     db: Session = Depends(get_db)
 ):
     from app import models
-    payload = decode_token(token)
+    payload = decode_token(credentials.credentials)
     user = db.query(models.User).filter(models.User.id == payload["user_id"]).first()
     if not user:
         raise HTTPException(status_code=401, detail="User not found")

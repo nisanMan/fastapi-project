@@ -4,7 +4,8 @@ from sqlalchemy.orm import Session
 from .. import schemas
 from ..database import get_db
 from ..services.user_service import UserService
-from ..auth.jwt_handler import decode_token, oauth2_scheme
+from ..auth.jwt_handler import decode_token, security
+from fastapi.security import HTTPAuthorizationCredentials
 from ..limiter import limiter
 from ..config import settings
 
@@ -55,7 +56,7 @@ async def logout_all(
     request: Request,
     response: Response,
     db: Session = Depends(get_db),
-    token: str = Depends(oauth2_scheme)
+    credentials: HTTPAuthorizationCredentials = Depends(security)
 ):
-    payload = decode_token(token)
+    payload = decode_token(credentials.credentials)
     return UserService(db).logout_all(payload["user_id"], response)
