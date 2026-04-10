@@ -5,7 +5,7 @@ def test_create_item(client, auth_headers):
         "title": "Test Item",
         "description": "Test Description"
     }, headers=auth_headers)
-    assert response.status_code == 200
+    assert response.status_code == 201
     assert response.json()["title"] == "Test Item"
 
 
@@ -84,8 +84,7 @@ def test_delete_item(client, auth_headers):
     }, headers=auth_headers)
     item_id = create.json()["id"]
     response = client.delete(f"/items/{item_id}", headers=auth_headers)
-    assert response.status_code == 200
-    assert response.json()["message"] == "Item deleted"
+    assert response.status_code == 204
 
 
 def test_delete_item_not_owner(client, auth_headers):

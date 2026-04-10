@@ -8,6 +8,8 @@ from sqlalchemy.orm import sessionmaker
 from app.main import app
 from app.database import Base, get_db
 
+from app.limiter import limiter
+
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
 engine = create_engine(
@@ -29,6 +31,7 @@ def override_get_db():
 def client():
     Base.metadata.create_all(bind=engine)
     app.dependency_overrides[get_db] = override_get_db
+    limiter._storage.reset()
     with TestClient(app) as c:
         yield c
     Base.metadata.drop_all(bind=engine)
@@ -65,3 +68,8 @@ def auth_data(client):                          # ← חדש — מחזיר גם
         "headers": {"Authorization": f"Bearer {token}"},
         "refresh_token": refresh_token
     }
+
+@pytest.fixture(autouse=True)
+def reset_limiter():
+    limiter._storage.reset()  # מאפס לפני כל טסט
+    yield

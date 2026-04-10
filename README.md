@@ -20,6 +20,7 @@ fastapi_project/
 │   ├── database.py
 │   ├── logger.py
 │   ├── config.py
+│   ├── limiter.py
 │   │ 
 │   ├── repositories/
 │   │   ├── __init__.py
@@ -45,6 +46,7 @@ fastapi_project/
 │   ├── conftest.py
 │   ├── test_health.py
 │   ├── test_users.py
+│   ├── test_rate_limit.py
 │   └── test_items.py
 │ 
 ├── .env
@@ -110,20 +112,24 @@ Register and login to receive a JWT token. Include it in all protected requests:
 Authorization: Bearer <token>
 ```
 
+
 ---
 
-## API Endpoints
+## 🚀 API Endpoints
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| POST | `/users/register` | ❌ | Register a new user |
-| POST | `/users/login` | ❌ | Login and receive JWT token |
-| GET | `/items/` | ✅ | Get current user's items |
-| GET | `/items/all` | ✅ | Get all items (paginated) |
-| POST | `/items/` | ✅ | Create a new item |
-| PUT | `/items/{id}` | ✅ | Update an item |
-| DELETE | `/items/{id}` | ✅ | Soft delete an item |
-| GET | `/health` | ❌ | App and database health status |
+| Category | Method | Endpoint | Auth | Description |
+|---|---|---|---|---|
+| Users | POST | `/users/register` | ❌ | Register a new user |
+| Users | POST | `/users/login` | ❌ | Login and receive JWT + refresh cookie |
+| Users | POST | `/users/refresh` | ❌ | Get new access token using refresh token |
+| Users | POST | `/users/logout` | ❌ | Logout from current session |
+| Users | POST | `/users/logout-all` | ❌ | Logout from all sessions |
+| Items | GET | `/items/` | ✅ | Get current user's items |
+| Items | GET | `/items/all` | ✅ | Get all items (paginated) |
+| Items | POST | `/items/` | ✅ | Create a new item |
+| Items | PUT | `/items/{item_id}` | ✅ | Update an item |
+| Items | DELETE | `/items/{item_id}` | ✅ | Soft delete an item |
+| Health | GET | `/health` | ❌ | App and database health status |
 
 ---
 
@@ -254,8 +260,8 @@ git push → Run Tests → Deploy to Railway (only if tests pass)
 - [x] Health Check endpoint
 
 **v1.6 — Security**
-- [ ] Rate Limiting
-- [ ] Refresh Tokens
+- [X] Rate Limiting
+- [X] Refresh Tokens
 - [ ] Email Verification
 - [ ] Password Reset
 
@@ -287,3 +293,13 @@ git push → Run Tests → Deploy to Railway (only if tests pass)
 
  🧱  🛠🗄️ 🧪 -->
 ![Repo views](https://komarev.com/ghpvc/?username=nisanMan&repo=fastapi-project)
+
+
+
+```bash
+curl -X POST https://fastapi-project-production-4bdc.up.railway.app/users/login -H "Content-Type: application/json" -d "{\"email\":\"user@example.com\",\"password\":\"123456\"}" -v 2>&1 | findstr /i "cookie"
+```
+
+```bash
+curl -X POST https://fastapi-project-production-4bdc.up.railway.app/users/logout -b "refresh_token=ZIqdLVPY1tv2kEoY5yTb6XPnZCo9vls1RNBTL9XSI7hTcvQnCIXOsH4gHG2vd-zA-fCXYCcTJvUmrqsNiS6E9g"
+```
