@@ -266,10 +266,10 @@ git push → Run Tests → Deploy to Railway (only if tests pass)
 - [ ] Password Reset
 
 **v1.7 — Monitoring & Docs**
-- [ ] Structured JSON Logging
-- [ ] Metrics (request count, response time)
 - [ ] Swagger descriptions per endpoint
 - [ ] API Versioning `/api/v1/`
+- [ ] Structured JSON Logging
+- [ ] Metrics (request count, response time)
 
 **v1.8 — Tests**
 - [ ] Test Coverage Report

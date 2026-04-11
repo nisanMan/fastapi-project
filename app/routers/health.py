@@ -8,9 +8,15 @@ from sqlalchemy import text
 
 router = APIRouter(tags=["Health"])
 
-@router.get("/health")
+@router.get("/health",
+    summary="Health check",
+    responses={
+        200: {"description": "App and database are healthy"},
+    }
+)
 @limiter.limit(settings.DEFAULT_RATE_LIMIT)
 async def health_check(request: Request, db: Session = Depends(get_db)):
+    """Check the status of the app and database connection."""
     try:
         db.execute(text("SELECT 1"))
         db_status = "ok"
