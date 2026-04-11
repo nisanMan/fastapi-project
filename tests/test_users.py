@@ -129,3 +129,8 @@ def test_logout_all_invalidates_all_tokens(client, auth_data):
     client.cookies.set("refresh_token", auth_data["refresh_token"])
     response = client.post("/users/refresh")
     assert response.status_code == 401
+
+def test_access_protected_route_without_token(client):
+    response = client.get("/items/")
+    assert response.status_code == 403
+

@@ -7,8 +7,8 @@ from sqlalchemy.orm import sessionmaker
 
 from app.main import app
 from app.database import Base, get_db
-
 from app.limiter import limiter
+from .factories import create_user
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
@@ -40,36 +40,9 @@ def client():
 
 @pytest.fixture
 def auth_headers(client):
-    client.post("/users/register", json={
-        "email": "test@example.com",
-        "password": "123456"
-    })
-    response = client.post("/users/login", json={
-        "email": "test@example.com",
-        "password": "123456"
-    })
-    token = response.json()["access_token"]
-    return {"Authorization": f"Bearer {token}"}
+    return create_user(client)["headers"]
 
 
 @pytest.fixture
-def auth_data(client):                          # ← חדש — מחזיר גם cookie
-    client.post("/users/register", json={
-        "email": "test@example.com",
-        "password": "123456"
-    })
-    response = client.post("/users/login", json={
-        "email": "test@example.com",
-        "password": "123456"
-    })
-    token = response.json()["access_token"]
-    refresh_token = response.cookies.get("refresh_token")
-    return {
-        "headers": {"Authorization": f"Bearer {token}"},
-        "refresh_token": refresh_token
-    }
-
-@pytest.fixture(autouse=True)
-def reset_limiter():
-    limiter._storage.reset()  # מאפס לפני כל טסט
-    yield
+def auth_data(client):
+    return create_user(client)
