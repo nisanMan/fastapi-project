@@ -42,6 +42,7 @@ fastapi_project/
 │       └── jwt_handler.py
 │ 
 ├── tests/
+│   ├── TESTING.md
 │   ├── __init__.py
 │   ├── conftest.py
 │   ├── test_health.py
@@ -116,10 +117,11 @@ This API uses a two-token system:
 | Refresh Token | httpOnly cookie | 7 days | Issue new access tokens |
 
 ### Flow
+```
 Register → Login → receive Access Token + Refresh Token cookie
 → use Access Token for protected requests
 → when expired, call /users/refresh to get a new one
-
+```
 ### Protected requests
 Authorization: Bearer <access_token>
 
@@ -197,7 +199,7 @@ docker-compose run api pytest tests/ -v
 
 For the full testing guide including factory pattern, coverage breakdown, and how to write new tests:
 
-→ See [TESTING.md](TESTING.md)
+→ See [TESTING.md](tests/TESTING.md)
 
 ---
 
