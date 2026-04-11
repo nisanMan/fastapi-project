@@ -266,10 +266,9 @@ git push → Run Tests → Deploy to Railway (only if tests pass)
 - [ ] Password Reset
 
 **v1.7 — Monitoring & Docs**
-- [ ] Swagger descriptions per endpoint
+- [X] Swagger descriptions per endpoint
 - [ ] API Versioning `/api/v1/`
-- [ ] Structured JSON Logging
-- [ ] Metrics (request count, response time)
+- [X] Structured JSON Logging
 
 **v1.8 — Tests**
 - [ ] Test Coverage Report
@@ -281,6 +280,9 @@ git push → Run Tests → Deploy to Railway (only if tests pass)
 - [ ] Nginx (reverse proxy)
 - [ ] Background Tasks
 - [ ] Environment separation (dev / staging / prod)
+- [ ] CMD alembic upgrade head && uvicorn app.main:app
+- [ ] Metrics (request count, response time)
+
 
 <!--# 🚀 FastAPI Project
 🐳 Docker
@@ -303,3 +305,7 @@ curl -X POST https://fastapi-project-production-4bdc.up.railway.app/users/login 
 ```bash
 curl -X POST https://fastapi-project-production-4bdc.up.railway.app/users/logout -b "refresh_token=ZIqdLVPY1tv2kEoY5yTb6XPnZCo9vls1RNBTL9XSI7hTcvQnCIXOsH4gHG2vd-zA-fCXYCcTJvUmrqsNiS6E9g"
 ```
+
+```bash
+docker-compose run api pytest tests/ -v --cov=app --cov-report=term-missing
+````
