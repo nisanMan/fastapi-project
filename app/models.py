@@ -58,5 +58,9 @@ class Log(Base):
     level = Column(String)
     message = Column(String)
     user_id = Column(Integer, nullable=True)
-    path = Column(String)
-    created_at = Column(DateTime, default=utcnow)           # ← תיקון
+    path = Column(String, nullable=True)
+    method = Column(String, nullable=True)      # GET, POST...
+    status_code = Column(Integer, nullable=True) # 200, 401...
+    duration_ms = Column(Integer, nullable=True) # כמה זמן לקחה הבקשה
+    ip = Column(String, nullable=True)           # IP של הלקוח
+    created_at = Column(DateTime, default=utcnow)

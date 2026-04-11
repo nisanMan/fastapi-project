@@ -22,7 +22,7 @@ jobs:
 
       - name: Set up Python
         uses: actions/setup-python@v5.4.0
-        
+
         with:
           python-version: "3.11"
 
@@ -46,5 +46,10 @@ jobs:
 
       - name: Deploy to Railway
         run: railway up --detach --service fastapi-project
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Run migrations
+        run: railway run --service fastapi-project alembic upgrade head
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
